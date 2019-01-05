@@ -239,18 +239,18 @@
         // Indeed the group update notifications are triggered by the matrix session only for the user's groups.
         void (^success)(void) = ^void(void)
         {
-            [self refreshDisplayWithGroup:_group];
+            [self refreshDisplayWithGroup:self->_group];
         };
         
         // Trigger a refresh on the group members and the invited users.
         [self.mxSession updateGroupUsers:_group success:(isPreview ? success : nil) failure:^(NSError *error) {
             
-            NSLog(@"[GroupParticipantsViewController] viewWillAppear: group members update failed %@", _group.groupId);
+            NSLog(@"[GroupParticipantsViewController] viewWillAppear: group members update failed %@", self->_group.groupId);
             
         }];
         [self.mxSession updateGroupInvitedUsers:_group success:(isPreview ? success : nil) failure:^(NSError *error) {
             
-            NSLog(@"[GroupParticipantsViewController] viewWillAppear: invited users update failed %@", _group.groupId);
+            NSLog(@"[GroupParticipantsViewController] viewWillAppear: invited users update failed %@", self->_group.groupId);
             
         }];
     }
@@ -305,7 +305,7 @@
             [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseIn
                              animations:^{
                                  
-                                 tableViewMaskLayer.bounds = newBounds;
+                                 self->tableViewMaskLayer.bounds = newBounds;
                                  
                              }
                              completion:^(BOOL finished){
@@ -421,7 +421,7 @@
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseIn
                      animations:^{
                          
-                         addParticipantButtonImageViewBottomConstraint.constant = keyboardHeight + 9;
+                         self->addParticipantButtonImageViewBottomConstraint.constant = keyboardHeight + 9;
                          
                          // Force to render the view
                          [self.view layoutIfNeeded];
@@ -654,7 +654,7 @@
     pendingMaskSpinnerView.alpha = 0;
     [UIView animateWithDuration:0.3 delay:0.3 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         
-        pendingMaskSpinnerView.alpha = 1;
+        self->pendingMaskSpinnerView.alpha = 1;
         
     } completion:^(BOOL finished) {
     }];
@@ -1073,14 +1073,14 @@
                                                                    self->currentAlert = nil;
                                                                    
                                                                    [self addPendingActionMask];
-                                                                   [self.mxSession leaveGroup:_group.groupId success:^{
+                                                                   [self.mxSession leaveGroup:self->_group.groupId success:^{
                                                                        
                                                                        [self withdrawViewControllerAnimated:YES completion:nil];
                                                                        
                                                                    } failure:^(NSError *error) {
                                                                        
                                                                        [self removePendingActionMask];
-                                                                       NSLog(@"[GroupParticipantsVC] Leave group %@ failed", _group.groupId);
+                                                                       NSLog(@"[GroupParticipantsVC] Leave group %@ failed", self->_group.groupId);
                                                                        // Alert user
                                                                        [[AppDelegate theDelegate] showErrorAsAlert:error];
                                                                        

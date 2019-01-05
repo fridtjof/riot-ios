@@ -375,24 +375,24 @@
         switch (state)
         {
             case MXBugReportStateProgressZipping:
-                _sendingLabel.text = NSLocalizedStringFromTable(@"bug_report_progress_zipping", @"Vector", nil);
+                self->_sendingLabel.text = NSLocalizedStringFromTable(@"bug_report_progress_zipping", @"Vector", nil);
                 break;
 
             case MXBugReportStateProgressUploading:
-                _sendingLabel.text = NSLocalizedStringFromTable(@"bug_report_progress_uploading", @"Vector", nil);
+                self->_sendingLabel.text = NSLocalizedStringFromTable(@"bug_report_progress_uploading", @"Vector", nil);
                 break;
 
             default:
                 break;
         }
 
-        _sendingProgress.progress = progress.fractionCompleted;
+        self->_sendingProgress.progress = progress.fractionCompleted;
 
     } success:^{
 
-        bugReportRestClient = nil;
+        self->bugReportRestClient = nil;
 
-        if (_reportCrash)
+        if (self->_reportCrash)
         {
             // Erase the crash log
             [MXLogger deleteCrashLog];
@@ -402,12 +402,12 @@
 
     } failure:^(NSError *error) {
 
-        bugReportRestClient = nil;
+        self->bugReportRestClient = nil;
 
         [[AppDelegate theDelegate] showErrorAsAlert:error];
 
-        _sendButton.hidden = NO;
-        _sendingContainer.hidden = YES;
+        self->_sendButton.hidden = NO;
+        self->_sendingContainer.hidden = YES;
     }];
 }
 

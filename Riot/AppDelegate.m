@@ -774,22 +774,22 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
                 }
                 
                 // Enable error notifications
-                isErrorNotificationSuspended = NO;
+                self->isErrorNotificationSuspended = NO;
                 
-                if (noCallSupportAlert)
+                if (self->noCallSupportAlert)
                 {
                     NSLog(@"[AppDelegate] restoreInitialDisplay: keep visible noCall support alert");
-                    [self showNotificationAlert:noCallSupportAlert];
+                    [self showNotificationAlert:self->noCallSupportAlert];
                 }
-                else if (cryptoDataCorruptedAlert)
+                else if (self->cryptoDataCorruptedAlert)
                 {
                     NSLog(@"[AppDelegate] restoreInitialDisplay: keep visible log in again");
-                    [self showNotificationAlert:cryptoDataCorruptedAlert];
+                    [self showNotificationAlert:self->cryptoDataCorruptedAlert];
                 }
                 // Check whether an error notification is pending
-                else if (_errorNotification)
+                else if (self->_errorNotification)
                 {
-                    [self showNotificationAlert:_errorNotification];
+                    [self showNotificationAlert:self->_errorNotification];
                 }
                 
             }];
@@ -806,10 +806,10 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
             }
             
             // Enable error notification (Check whether a notification is pending)
-            isErrorNotificationSuspended = NO;
-            if (_errorNotification)
+            self->isErrorNotificationSuspended = NO;
+            if (self->_errorNotification)
             {
-                [self showNotificationAlert:_errorNotification];
+                [self showNotificationAlert:self->_errorNotification];
             }
         }];
     }
@@ -1882,9 +1882,9 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
                 // So, come back to the home VC and show its loading wheel while processing
                 [self restoreInitialDisplay:^{
                     
-                    if ([_masterTabBarController.selectedViewController isKindOfClass:MXKViewController.class])
+                    if ([self->_masterTabBarController.selectedViewController isKindOfClass:MXKViewController.class])
                     {
-                        MXKViewController *homeViewController = (MXKViewController*)_masterTabBarController.selectedViewController;
+                        MXKViewController *homeViewController = (MXKViewController*)self->_masterTabBarController.selectedViewController;
                         
                         [homeViewController startActivityIndicator];
                         
@@ -1892,7 +1892,7 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
                         {
                             // The alias may be not part of user's rooms states
                             // Ask the HS to resolve the room alias into a room id and then retry
-                            universalLinkFragmentPending = fragment;
+                            self->universalLinkFragmentPending = fragment;
                             MXKAccount* account = accountManager.activeAccounts.firstObject;
                             [account.mxSession.matrixRestClient roomIDForRoomAlias:roomIdOrAlias success:^(NSString *roomId) {
                                 
@@ -1900,14 +1900,14 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
                                 [homeViewController stopActivityIndicator];
                                 
                                 // Check that 'fragment' has not been cancelled
-                                if ([universalLinkFragmentPending isEqualToString:fragment])
+                                if ([self->universalLinkFragmentPending isEqualToString:fragment])
                                 {
                                     // Retry opening the link but with the returned room id
                                     NSString *newUniversalLinkFragment =
                                     [fragment stringByReplacingOccurrencesOfString:[roomIdOrAlias stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]
                                                                         withString:[roomId stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
                                     
-                                    universalLinkFragmentPendingRoomAlias = @{roomId: roomIdOrAlias};
+                                    self->universalLinkFragmentPendingRoomAlias = @{roomId: roomIdOrAlias};
                                     
                                     [self handleUniversalLinkFragment:newUniversalLinkFragment];
                                 }
@@ -1924,12 +1924,12 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
                             MXKAccount* account = accountManager.activeAccounts.firstObject;
                             
                             NSLog(@"[AppDelegate] Universal link: Need to wait for the session to be sync'ed and running");
-                            universalLinkFragmentPending = fragment;
+                            self->universalLinkFragmentPending = fragment;
                             
-                            universalLinkWaitingObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kMXSessionStateDidChangeNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull notif) {
+                            self->universalLinkWaitingObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kMXSessionStateDidChangeNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull notif) {
                                 
                                 // Check that 'fragment' has not been cancelled
-                                if ([universalLinkFragmentPending isEqualToString:fragment])
+                                if ([self->universalLinkFragmentPending isEqualToString:fragment])
                                 {
                                     // Check whether the concerned session is the associated one
                                     if (notif.object == account.mxSession && account.mxSession.state == MXSessionStateRunning)
@@ -1971,11 +1971,11 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
                                     [homeViewController stopActivityIndicator];
                                     
                                     // If no data is available for this room, we name it with the known room alias (if any).
-                                    if (!succeeded && universalLinkFragmentPendingRoomAlias[roomIdOrAlias])
+                                    if (!succeeded && self->universalLinkFragmentPendingRoomAlias[roomIdOrAlias])
                                     {
-                                        roomPreviewData.roomName = universalLinkFragmentPendingRoomAlias[roomIdOrAlias];
+                                        roomPreviewData.roomName = self->universalLinkFragmentPendingRoomAlias[roomIdOrAlias];
                                     }
-                                    universalLinkFragmentPendingRoomAlias = nil;
+                                    self->universalLinkFragmentPendingRoomAlias = nil;
                                     
                                     [self showRoomPreview:roomPreviewData];
                                 }];
@@ -2000,7 +2000,7 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
             universalLinkWaitingObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kMXKAccountManagerDidAddAccountNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notif) {
                 
                 // Check that 'fragment' has not been cancelled
-                if ([universalLinkFragmentPending isEqualToString:fragment])
+                if ([self->universalLinkFragmentPending isEqualToString:fragment])
                 {
                     NSLog(@"[AppDelegate] Universal link:  The user is now logged in. Retry the link");
                     [self handleUniversalLinkFragment:fragment];
@@ -2065,7 +2065,7 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
             universalLinkWaitingObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kMXKAccountManagerDidAddAccountNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notif) {
                 
                 // Check that 'fragment' has not been cancelled
-                if ([universalLinkFragmentPending isEqualToString:fragment])
+                if ([self->universalLinkFragmentPending isEqualToString:fragment])
                 {
                     NSLog(@"[AppDelegate] Universal link:  The user is now logged in. Retry the link");
                     [self handleUniversalLinkFragment:fragment];
@@ -2347,7 +2347,7 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
             // Set the push gateway URL.
             account.pushGatewayURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"pushGatewayURL"];
             
-            if (isPushRegistered)
+            if (self->isPushRegistered)
             {
                 // Enable push notifications by default on new added account
                 account.enablePushKitNotifications = YES;
@@ -2679,7 +2679,7 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
         }
         
         // Return to authentication screen
-        [_masterTabBarController showAuthenticationScreen];
+        [self->_masterTabBarController showAuthenticationScreen];
         
         // Note: Keep App settings
         // But enforce usage of member lazy loading
@@ -2724,17 +2724,17 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
                                                                        usingBlock:^(NSNotification *notif)
     {
         // Ignore the call if a call is already in progress
-        if (!currentCallViewController && !_jitsiViewController)
+        if (!self->currentCallViewController && !self->_jitsiViewController)
         {
             MXCall *mxCall = (MXCall*)notif.object;
             
             BOOL isCallKitEnabled = [MXCallKitAdapter callKitAvailable] && [MXKAppSettings standardAppSettings].isCallKitEnabled;
             
             // Prepare the call view controller
-            currentCallViewController = [CallViewController callViewController:nil];
-            currentCallViewController.playRingtone = !isCallKitEnabled;
-            currentCallViewController.mxCall = mxCall;
-            currentCallViewController.delegate = self;
+            self->currentCallViewController = [CallViewController callViewController:nil];
+            self->currentCallViewController.playRingtone = !isCallKitEnabled;
+            self->currentCallViewController.mxCall = mxCall;
+            self->currentCallViewController.delegate = self;
 
             UIApplicationState applicationState = UIApplication.sharedApplication.applicationState;
             
@@ -2758,7 +2758,7 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
                                                                                      if (call.state == MXCallStateEnded)
                                                                                      {
                                                                                          // Set call vc to nil to let our app handle new incoming calls even it wasn't killed by the system
-                                                                                         currentCallViewController = nil;
+                                                                                         self->currentCallViewController = nil;
                                                                                          [notificationCenter removeObserver:token];
                                                                                          
                                                                                          [handler endBackgrounTaskWithIdentifier:callTaskIdentifier];
@@ -3074,7 +3074,7 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
                                 if ([[ruleAction.parameters valueForKey:@"set_tweak"] isEqualToString:@"sound"])
                                 {
                                     // Play message sound
-                                    AudioServicesPlaySystemSound(_messageSound);
+                                    AudioServicesPlaySystemSound(self->_messageSound);
                                 }
                             }
                         }
@@ -3197,7 +3197,7 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
     [self restoreInitialDisplay:^{
         
         // Select room to display its details (dispatch this action in order to let TabBarController end its refresh)
-        [_masterTabBarController selectRoomWithId:roomId andEventId:eventId inMatrixSession:mxSession];
+        [self->_masterTabBarController selectRoomWithId:roomId andEventId:eventId inMatrixSession:mxSession];
         
     }];
 }
@@ -3206,7 +3206,7 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
 {
     [self restoreInitialDisplay:^{
         
-        [_masterTabBarController showRoomPreview:roomPreviewData];
+        [self->_masterTabBarController showRoomPreview:roomPreviewData];
         
     }];
 }
@@ -3367,7 +3367,7 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
     [self restoreInitialDisplay:^{
         
         // Select group to display its details (dispatch this action in order to let TabBarController end its refresh)
-        [_masterTabBarController selectGroup:group inMatrixSession:mxSession];
+        [self->_masterTabBarController selectGroup:group inMatrixSession:mxSession];
         
     }];
 }
@@ -3425,7 +3425,7 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
             // This will correctly manage the navigation bar layout.
             [self presentCallViewController:YES completion:^{
                 
-                [self dismissCallViewController:currentCallViewController completion:completion];
+                [self dismissCallViewController:self->currentCallViewController completion:completion];
                 
             }];
         }
@@ -3442,12 +3442,12 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
 
         [_jitsiViewController openWidget:jitsiWidget withVideo:video success:^{
 
-            _jitsiViewController.delegate = self;
+            self->_jitsiViewController.delegate = self;
             [self presentJitsiViewController:nil];
         
         } failure:^(NSError *error) {
 
-            _jitsiViewController = nil;
+            self->_jitsiViewController = nil;
 
             NSError *theError = [NSError errorWithDomain:@""
                                                     code:0
@@ -3502,7 +3502,7 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
     {
         [_jitsiViewController dismissViewControllerAnimated:YES completion:^{
 
-            MXRoom *room = [_jitsiViewController.widget.mxSession roomWithRoomId:_jitsiViewController.widget.roomId];
+            MXRoom *room = [self->_jitsiViewController.widget.mxSession roomWithRoomId:self->_jitsiViewController.widget.roomId];
             NSString *btnTitle = [NSString stringWithFormat:NSLocalizedStringFromTable(@"active_call_details", @"Vector", nil), room.summary.displayname];
             [self addCallStatusBar:btnTitle];
 
@@ -3757,9 +3757,9 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
                                      {
                                          case MXEventTypeCallInvite:
                                          {
-                                             if (noCallSupportAlert)
+                                             if (self->noCallSupportAlert)
                                              {
-                                                 [noCallSupportAlert dismissViewControllerAnimated:NO completion:nil];
+                                                 [self->noCallSupportAlert dismissViewControllerAnimated:NO completion:nil];
                                              }
                                              
                                              MXCallInviteEventContent *callInviteEventContent = [MXCallInviteEventContent modelFromJSON:event.content];
@@ -3781,13 +3781,13 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
                                              
                                              NSString *message = [NSString stringWithFormat:NSLocalizedStringFromTable(@"no_voip", @"Vector", nil), callerDisplayname, appDisplayName];
                                              
-                                             noCallSupportAlert = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTable(@"no_voip_title", @"Vector", nil)
+                                             self->noCallSupportAlert = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTable(@"no_voip_title", @"Vector", nil)
                                                                                                       message:message
                                                                                                preferredStyle:UIAlertControllerStyleAlert];
                                              
                                              __weak typeof(self) weakSelf = self;
                                              
-                                             [noCallSupportAlert addAction:[UIAlertAction actionWithTitle:[NSBundle mxk_localizedStringForKey:@"ignore"]
+                                             [self->noCallSupportAlert addAction:[UIAlertAction actionWithTitle:[NSBundle mxk_localizedStringForKey:@"ignore"]
                                                                                                     style:UIAlertActionStyleDefault
                                                                                                   handler:^(UIAlertAction * action) {
                                                                                                       
@@ -3799,7 +3799,7 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
                                                                                                       
                                                                                                   }]];
                                              
-                                             [noCallSupportAlert addAction:[UIAlertAction actionWithTitle:[NSBundle mxk_localizedStringForKey:@"reject_call"]
+                                             [self->noCallSupportAlert addAction:[UIAlertAction actionWithTitle:[NSBundle mxk_localizedStringForKey:@"reject_call"]
                                                                                                     style:UIAlertActionStyleDefault
                                                                                                   handler:^(UIAlertAction * action) {
                                                                                                       
@@ -3821,17 +3821,17 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
                                                                                                       
                                                                                                   }]];
                                              
-                                             [self showNotificationAlert:noCallSupportAlert];
+                                             [self showNotificationAlert:self->noCallSupportAlert];
                                              break;
                                          }
                                              
                                          case MXEventTypeCallAnswer:
                                          case MXEventTypeCallHangup:
                                              // The call has ended. The alert is no more needed.
-                                             if (noCallSupportAlert)
+                                             if (self->noCallSupportAlert)
                                              {
-                                                 [noCallSupportAlert dismissViewControllerAnimated:YES completion:nil];
-                                                 noCallSupportAlert = nil;
+                                                 [self->noCallSupportAlert dismissViewControllerAnimated:YES completion:nil];
+                                                 self->noCallSupportAlert = nil;
                                              }
                                              break;
                                              
@@ -3902,14 +3902,14 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
 
         NSLog(@"[AppDelegate] checkPendingRoomKeyRequestsInSession: pendingKeyRequests.count: %@. Already displayed: %@",
               @(pendingKeyRequests.count),
-              roomKeyRequestViewController ? @"YES" : @"NO");
+              self->roomKeyRequestViewController ? @"YES" : @"NO");
 
-        if (roomKeyRequestViewController)
+        if (self->roomKeyRequestViewController)
         {
             // Check if the current RoomKeyRequestViewController is still valid
-            MXSession *currentMXSession = roomKeyRequestViewController.mxSession;
-            NSString *currentUser = roomKeyRequestViewController.device.userId;
-            NSString *currentDevice = roomKeyRequestViewController.device.deviceId;
+            MXSession *currentMXSession = self->roomKeyRequestViewController.mxSession;
+            NSString *currentUser = self->roomKeyRequestViewController.device.userId;
+            NSString *currentDevice = self->roomKeyRequestViewController.device.deviceId;
 
             NSArray<MXIncomingRoomKeyRequest *> *currentPendingRequest = [pendingKeyRequests objectForDevice:currentDevice forUser:currentUser];
 
@@ -3918,12 +3918,12 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
                 NSLog(@"[AppDelegate] checkPendingRoomKeyRequestsInSession: Cancel current dialog");
 
                 // The key request has been probably cancelled, remove the popup
-                [roomKeyRequestViewController hide];
-                roomKeyRequestViewController = nil;
+                [self->roomKeyRequestViewController hide];
+                self->roomKeyRequestViewController = nil;
             }
         }
 
-        if (!roomKeyRequestViewController && pendingKeyRequests.count)
+        if (!self->roomKeyRequestViewController && pendingKeyRequests.count)
         {
             // Pick the first coming user/device pair
             NSString *userId = pendingKeyRequests.userIds.firstObject;
@@ -3941,15 +3941,15 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
                     {
                         NSLog(@"[AppDelegate] checkPendingRoomKeyRequestsInSession: Open dialog for %@", deviceInfo);
 
-                        roomKeyRequestViewController = [[RoomKeyRequestViewController alloc] initWithDeviceInfo:deviceInfo wasNewDevice:wasNewDevice andMatrixSession:mxSession onComplete:^{
+                        self->roomKeyRequestViewController = [[RoomKeyRequestViewController alloc] initWithDeviceInfo:deviceInfo wasNewDevice:wasNewDevice andMatrixSession:mxSession onComplete:^{
 
-                            roomKeyRequestViewController = nil;
+                            self->roomKeyRequestViewController = nil;
 
                             // Check next pending key request, if any
                             [self checkPendingRoomKeyRequests];
                         }];
 
-                        [roomKeyRequestViewController show];
+                        [self->roomKeyRequestViewController show];
                     };
 
                     // If the device was new before, it's not any more.

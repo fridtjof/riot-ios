@@ -1550,7 +1550,7 @@
                              self.bubblesTableViewTopConstraint.constant = (isVisible ? self.expandedHeaderContainerHeightConstraint.constant - self.bubblesTableView.mxk_adjustedContentInset.top : 0);
                              self.jumpToLastUnreadBannerContainerTopConstraint.constant = (isVisible ? self.expandedHeaderContainerHeightConstraint.constant : self.bubblesTableView.mxk_adjustedContentInset.top);
                              
-                             expandedHeader.roomAvatar.alpha = 1;
+                             self->expandedHeader.roomAvatar.alpha = 1;
                              
                              // Force to render the view
                              [self forceLayoutRefresh];
@@ -1773,7 +1773,7 @@
                              self.bubblesTableViewTopConstraint.constant = self.previewHeaderContainerHeightConstraint.constant - self.bubblesTableView.mxk_adjustedContentInset.top;
                              self.jumpToLastUnreadBannerContainerTopConstraint.constant = self.previewHeaderContainerHeightConstraint.constant;
                              
-                             previewHeader.roomAvatar.alpha = 1;
+                             self->previewHeader.roomAvatar.alpha = 1;
                              
                              // Force to render the view
                              [self forceLayoutRefresh];
@@ -3235,9 +3235,9 @@
             if (!toolbarView.placeholder)
             {
                 // Restore the placeholder if any
-                toolbarView.placeholder =  savedInputToolbarPlaceholder.length ? savedInputToolbarPlaceholder : nil;
+                toolbarView.placeholder =  self->savedInputToolbarPlaceholder.length ? self->savedInputToolbarPlaceholder : nil;
             }
-            savedInputToolbarPlaceholder = nil;
+            self->savedInputToolbarPlaceholder = nil;
         }];
     }
 }
@@ -3791,7 +3791,7 @@
     kMXCallStateDidChangeObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kMXCallStateDidChange object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notif) {
         
         MXCall *call = notif.object;
-        if ([call.room.roomId isEqualToString:customizedRoomDataSource.roomId])
+        if ([call.room.roomId isEqualToString:self->customizedRoomDataSource.roomId])
         {
             [self refreshActivitiesViewDisplay];
             [self refreshRoomInputToolbar];
@@ -3800,7 +3800,7 @@
     kMXCallManagerConferenceStartedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kMXCallManagerConferenceStarted object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notif) {
         
         NSString *roomId = notif.object;
-        if ([roomId isEqualToString:customizedRoomDataSource.roomId])
+        if ([roomId isEqualToString:self->customizedRoomDataSource.roomId])
         {
             [self refreshActivitiesViewDisplay];
         }
@@ -3808,7 +3808,7 @@
     kMXCallManagerConferenceFinishedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kMXCallManagerConferenceFinished object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notif) {
         
         NSString *roomId = notif.object;
-        if ([roomId isEqualToString:customizedRoomDataSource.roomId])
+        if ([roomId isEqualToString:self->customizedRoomDataSource.roomId])
         {
             [self refreshActivitiesViewDisplay];
             [self refreshRoomInputToolbar];
@@ -3859,7 +3859,7 @@
 
         Widget *widget = notif.object;
         if (widget.mxSession == self.roomDataSource.mxSession
-            && [widget.roomId isEqualToString:customizedRoomDataSource.roomId])
+            && [widget.roomId isEqualToString:self->customizedRoomDataSource.roomId])
         {
             // Jitsi conference widget existence is shown in the bottom bar
             // Update the bar
@@ -3959,9 +3959,9 @@
                     NSLog(@"[RoomVC] onOngoingConferenceCallPressed");
                     
                     // Make sure there is not yet a call
-                    if (![customizedRoomDataSource.mxSession.callManager callInRoom:customizedRoomDataSource.roomId])
+                    if (![self->customizedRoomDataSource.mxSession.callManager callInRoom:self->customizedRoomDataSource.roomId])
                     {
-                        [customizedRoomDataSource.room placeCallWithVideo:video success:nil failure:nil];
+                        [self->customizedRoomDataSource.room placeCallWithVideo:video success:nil failure:nil];
                     }
                 } onClosePressed:nil];
             }
@@ -4288,15 +4288,15 @@
                 
             } andIconTapGesture:^{
                 
-                if (currentAlert)
+                if (self->currentAlert)
                 {
-                    [currentAlert dismissViewControllerAnimated:NO completion:nil];
+                    [self->currentAlert dismissViewControllerAnimated:NO completion:nil];
                 }
                 
                 __weak __typeof(self) weakSelf = self;
-                currentAlert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+                self->currentAlert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
                 
-                [currentAlert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTable(@"room_resend_unsent_messages", @"Vector", nil)
+                [self->currentAlert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTable(@"room_resend_unsent_messages", @"Vector", nil)
                                                                  style:UIAlertActionStyleDefault
                                                                handler:^(UIAlertAction * action) {
                                                                    
@@ -4309,7 +4309,7 @@
                                                                    
                                                                }]];
                 
-                [currentAlert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTable(@"room_delete_unsent_messages", @"Vector", nil)
+                [self->currentAlert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTable(@"room_delete_unsent_messages", @"Vector", nil)
                                                                  style:UIAlertActionStyleDefault
                                                                handler:^(UIAlertAction * action) {
                                                                    
@@ -4322,7 +4322,7 @@
                                                                    
                                                                }]];
                 
-                [currentAlert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTable(@"cancel", @"Vector", nil)
+                [self->currentAlert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTable(@"cancel", @"Vector", nil)
                                                                  style:UIAlertActionStyleCancel
                                                                handler:^(UIAlertAction * action) {
                                                                    
@@ -4334,10 +4334,10 @@
                                                                    
                                                                }]];
                 
-                [currentAlert mxk_setAccessibilityIdentifier:@"RoomVCUnsentMessagesMenuAlert"];
-                [currentAlert popoverPresentationController].sourceView = roomActivitiesView;
-                [currentAlert popoverPresentationController].sourceRect = roomActivitiesView.bounds;
-                [self presentViewController:currentAlert animated:YES completion:nil];
+                [self->currentAlert mxk_setAccessibilityIdentifier:@"RoomVCUnsentMessagesMenuAlert"];
+                [self->currentAlert popoverPresentationController].sourceView = roomActivitiesView;
+                [self->currentAlert popoverPresentationController].sourceRect = roomActivitiesView.bounds;
+                [self presentViewController:self->currentAlert animated:YES completion:nil];
                 
             }];
         }
@@ -4597,19 +4597,19 @@
                 [UIView animateWithDuration:1.5 delay:0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseIn
                                  animations:^{
                                      
-                                     readMarkerTableViewCell.readMarkerViewLeadingConstraint.constant = readMarkerTableViewCell.readMarkerViewTrailingConstraint.constant = readMarkerTableViewCell.bubbleOverlayContainer.frame.size.width / 2;
-                                     readMarkerTableViewCell.readMarkerView.alpha = 0;
+                                     self->readMarkerTableViewCell.readMarkerViewLeadingConstraint.constant = self->readMarkerTableViewCell.readMarkerViewTrailingConstraint.constant = self->readMarkerTableViewCell.bubbleOverlayContainer.frame.size.width / 2;
+                                     self->readMarkerTableViewCell.readMarkerView.alpha = 0;
                                      
                                      // Force to render the view
-                                     [readMarkerTableViewCell.bubbleOverlayContainer layoutIfNeeded];
+                                     [self->readMarkerTableViewCell.bubbleOverlayContainer layoutIfNeeded];
                                      
                                  }
                                  completion:^(BOOL finished){
                                      
-                                     readMarkerTableViewCell.readMarkerView.hidden = YES;
-                                     readMarkerTableViewCell.readMarkerView.alpha = 1;
+                                     self->readMarkerTableViewCell.readMarkerView.hidden = YES;
+                                     self->readMarkerTableViewCell.readMarkerView.alpha = 1;
                                      
-                                     readMarkerTableViewCell = nil;
+                                     self->readMarkerTableViewCell = nil;
                                  }];
                 
             });

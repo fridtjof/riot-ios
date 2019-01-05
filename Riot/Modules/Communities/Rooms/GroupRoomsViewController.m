@@ -203,13 +203,13 @@
         // Indeed the group update notifications are triggered by the matrix session only for the user's groups.
         void (^success)(void) = ^void(void)
         {
-            [self refreshDisplayWithGroup:_group];
+            [self refreshDisplayWithGroup:self->_group];
         };
         
         // Trigger a refresh on the group rooms.
         [self.mxSession updateGroupRooms:_group success:(isPreview ? success : nil) failure:^(NSError *error) {
             
-            NSLog(@"[GroupRoomsViewController] viewWillAppear: group rooms update failed %@", _group.groupId);
+            NSLog(@"[GroupRoomsViewController] viewWillAppear: group rooms update failed %@", self->_group.groupId);
             
         }];
     }

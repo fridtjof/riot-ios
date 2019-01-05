@@ -94,7 +94,7 @@
     UIApplicationDidEnterBackgroundNotificationObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidEnterBackgroundNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notif) {
         
         // Leave potential editing mode
-        [self cancelEditionMode:isRefreshPending];
+        [self cancelEditionMode:self->isRefreshPending];
         
     }];
     

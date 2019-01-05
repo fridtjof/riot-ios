@@ -1047,7 +1047,7 @@
                                                                 preset:kMXRoomPresetTrustedPrivateChat
                                                                success:^(MXRoom *room) {
                                                                    
-                                                                   roomCreationRequest = nil;
+                                                                   self->roomCreationRequest = nil;
                                                                    
                                                                    [self removePendingActionMask];
                                                                    
@@ -1058,7 +1058,7 @@
                                                                    
                                                                    NSLog(@"[ContactDetailsViewController] Create room failed");
                                                                    
-                                                                   roomCreationRequest = nil;
+                                                                   self->roomCreationRequest = nil;
                                                                    
                                                                    [self removePendingActionMask];
                                                                    
@@ -1098,7 +1098,7 @@
                                                                 preset:kMXRoomPresetTrustedPrivateChat
                                                                success:^(MXRoom *room) {
                                                                    
-                                                                   roomCreationRequest = nil;
+                                                                   self->roomCreationRequest = nil;
                                                                    
                                                                    // Delay the call in order to be sure that the room is ready
                                                                    dispatch_async(dispatch_get_main_queue(), ^{
@@ -1110,7 +1110,7 @@
                                                                    
                                                                    NSLog(@"[ContactDetailsViewController] Create room failed");
                                                                    
-                                                                   roomCreationRequest = nil;
+                                                                   self->roomCreationRequest = nil;
                                                                    
                                                                    [self removePendingActionMask];
                                                                    

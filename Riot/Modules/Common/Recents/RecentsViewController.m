@@ -140,7 +140,7 @@
     UIApplicationDidEnterBackgroundNotificationObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidEnterBackgroundNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notif) {
         
         // Leave potential editing mode
-        [self cancelEditionMode:isRefreshPending];
+        [self cancelEditionMode:self->isRefreshPending];
         
     }];
     
@@ -1041,7 +1041,7 @@
                                                                              [self stopActivityIndicator];
                                                                              
                                                                              // Leave editing mode
-                                                                             [self cancelEditionMode:isRefreshPending];
+                                                                             [self cancelEditionMode:self->isRefreshPending];
                                                                          }
                                                                          
                                                                      }];
@@ -1049,7 +1049,7 @@
                                                                  else
                                                                  {
                                                                      // Leave editing mode
-                                                                     [self cancelEditionMode:isRefreshPending];
+                                                                     [self cancelEditionMode:self->isRefreshPending];
                                                                  }
                                                              }
                                                              
@@ -1107,7 +1107,7 @@
                     typeof(self) self = weakSelf;
                     [self stopActivityIndicator];
                     // Leave editing mode
-                    [self cancelEditionMode:isRefreshPending];
+                    [self cancelEditionMode:self->isRefreshPending];
                 }
                 
             } failure:^(NSError *error) {
@@ -1117,7 +1117,7 @@
                     typeof(self) self = weakSelf;
                     [self stopActivityIndicator];
                     
-                    NSLog(@"[RecentsViewController] Failed to update direct tag of the room (%@)", editedRoomId);
+                    NSLog(@"[RecentsViewController] Failed to update direct tag of the room (%@)", self->editedRoomId);
                     
                     // Notify the end user
                     NSString *userId = self.mainSession.myUser.userId; // TODO: handle multi-account
@@ -1126,7 +1126,7 @@
                                                                       userInfo:userId ? @{kMXKErrorUserIdKey: userId} : nil];
                     
                     // Leave editing mode
-                    [self cancelEditionMode:isRefreshPending];
+                    [self cancelEditionMode:self->isRefreshPending];
                 }
                 
             }];
@@ -1156,7 +1156,7 @@
                     [self stopActivityIndicator];
                     
                     // Leave editing mode
-                    [self cancelEditionMode:isRefreshPending];
+                    [self cancelEditionMode:self->isRefreshPending];
                     
                 }];
             }
@@ -1167,7 +1167,7 @@
                     [self stopActivityIndicator];
                     
                     // Leave editing mode
-                    [self cancelEditionMode:isRefreshPending];
+                    [self cancelEditionMode:self->isRefreshPending];
                     
                 }];
             }
@@ -1175,7 +1175,7 @@
         else
         {
             // Leave editing mode
-            [self cancelEditionMode:isRefreshPending];
+            [self cancelEditionMode:self->isRefreshPending];
         }
     }
 }

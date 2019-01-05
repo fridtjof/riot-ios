@@ -315,7 +315,7 @@
             [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseIn
                              animations:^{
                                  
-                                 tableViewMaskLayer.bounds = newBounds;
+                                 self->tableViewMaskLayer.bounds = newBounds;
                                  
                              }
                              completion:^(BOOL finished){
@@ -544,7 +544,7 @@
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseIn
                      animations:^{
                          
-                         addParticipantButtonImageViewBottomConstraint.constant = keyboardHeight + 9;
+                         self->addParticipantButtonImageViewBottomConstraint.constant = keyboardHeight + 9;
                          
                          // Force to render the view
                          [self.view layoutIfNeeded];
@@ -955,7 +955,7 @@
     pendingMaskSpinnerView.alpha = 0;
     [UIView animateWithDuration:0.3 delay:0.3 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         
-        pendingMaskSpinnerView.alpha = 1;
+        self->pendingMaskSpinnerView.alpha = 1;
         
     } completion:^(BOOL finished) {
     }];

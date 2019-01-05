@@ -591,7 +591,7 @@ typedef void (^blockSettingsViewController_onReadyToDestroy)(void);
             
             // Refresh the corresponding table view cell with animation
             [self.tableView reloadRowsAtIndexPaths:@[
-                                                     [NSIndexPath indexPathForRow:userSettingsNewEmailIndex inSection:SETTINGS_SECTION_USER_SETTINGS_INDEX]
+                                                     [NSIndexPath indexPathForRow:self->userSettingsNewEmailIndex inSection:SETTINGS_SECTION_USER_SETTINGS_INDEX]
                                                      ]
                                   withRowAnimation:UITableViewRowAnimationFade];
             
@@ -617,7 +617,7 @@ typedef void (^blockSettingsViewController_onReadyToDestroy)(void);
             
             // Refresh the corresponding table view cell with animation
             [self.tableView reloadRowsAtIndexPaths:@[
-                                                     [NSIndexPath indexPathForRow:userSettingsNewPhoneIndex inSection:SETTINGS_SECTION_USER_SETTINGS_INDEX]
+                                                     [NSIndexPath indexPathForRow:self->userSettingsNewPhoneIndex inSection:SETTINGS_SECTION_USER_SETTINGS_INDEX]
                                                      ]
                                   withRowAnimation:UITableViewRowAnimationFade];
             
@@ -992,7 +992,7 @@ typedef void (^blockSettingsViewController_onReadyToDestroy)(void);
         
         if (devices)
         {
-            devicesArray = [NSMutableArray arrayWithArray:devices];
+            self->devicesArray = [NSMutableArray arrayWithArray:devices];
             
             // Sort devices according to the last seen date.
             NSComparator comparator = ^NSComparisonResult(MXDevice *deviceA, MXDevice *deviceB) {
@@ -1010,11 +1010,11 @@ typedef void (^blockSettingsViewController_onReadyToDestroy)(void);
             };
             
             // Sort devices list
-            [devicesArray sortUsingComparator:comparator];
+            [self->devicesArray sortUsingComparator:comparator];
         }
         else
         {
-            devicesArray = nil;
+            self->devicesArray = nil;
 
         }
         
@@ -3689,7 +3689,7 @@ typedef void (^blockSettingsViewController_onReadyToDestroy)(void);
             if (success)
             {
                 // Let another app handling this file
-                self->documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:keyExportsFile];
+                self->documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:self->keyExportsFile];
                 [self->documentInteractionController setDelegate:self];
 
                 if ([self->documentInteractionController presentOptionsMenuFromRect:self.view.bounds inView:self.view animated:YES])
@@ -3698,7 +3698,7 @@ typedef void (^blockSettingsViewController_onReadyToDestroy)(void);
                     // We use [UIDocumentInteractionControllerDelegate didEndSendingToApplication] for that
                     // but it is not reliable for all cases (see http://stackoverflow.com/a/21867096).
                     // So, arm a timer to auto delete the file after 10mins.
-                    keyExportsFileDeletionTimer = [NSTimer scheduledTimerWithTimeInterval:600 target:self selector:@selector(deleteKeyExportFile) userInfo:self repeats:NO];
+                    self->keyExportsFileDeletionTimer = [NSTimer scheduledTimerWithTimeInterval:600 target:self selector:@selector(deleteKeyExportFile) userInfo:self repeats:NO];
                 }
                 else
                 {
@@ -3954,7 +3954,7 @@ typedef void (^blockSettingsViewController_onReadyToDestroy)(void);
                 
                 MXKAccount* account = [MXKAccountManager sharedManager].activeAccounts.firstObject;
                 
-                [account changePassword:currentPasswordTextField.text with:newPasswordTextField1.text success:^{
+                [account changePassword:self->currentPasswordTextField.text with:self->newPasswordTextField1.text success:^{
                     
                     if (weakSelf)
                     {

@@ -394,7 +394,7 @@
             if (!isLoggedOut)
             {
                 // Reset temporary params
-                authViewControllerRegistrationParameters = nil;
+                self->authViewControllerRegistrationParameters = nil;
             }
         }];
     }
@@ -624,10 +624,10 @@
             
             authViewControllerObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kMXKAccountManagerDidAddAccountNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notif) {
                 
-                _authViewController = nil;
+                self->_authViewController = nil;
                 
-                [[NSNotificationCenter defaultCenter] removeObserver:authViewControllerObserver];
-                authViewControllerObserver = nil;
+                [[NSNotificationCenter defaultCenter] removeObserver:self->authViewControllerObserver];
+                self->authViewControllerObserver = nil;
             }];
             
             // Forward parameters if any

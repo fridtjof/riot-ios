@@ -73,11 +73,11 @@ static const NSString *kJitsiServerUrl = @"https://jitsi.riot.im/";
             // And build from it the url to use in jitsi-meet sdk
             if (confId)
             {
-                jitsiUrl = [NSString stringWithFormat:@"%@%@", kJitsiServerUrl, confId];
+                self->jitsiUrl = [NSString stringWithFormat:@"%@%@", kJitsiServerUrl, confId];
             }
         }
 
-        if (jitsiUrl)
+        if (self->jitsiUrl)
         {
             if (success)
             {
@@ -162,9 +162,9 @@ static const NSString *kJitsiServerUrl = @"https://jitsi.riot.im/";
     dispatch_async(dispatch_get_main_queue(), ^{
         
         // The conference is over. Let the delegate close this view controller.
-        if (_delegate)
+        if (self->_delegate)
         {
-            [_delegate jitsiViewController:self dismissViewJitsiController:nil];
+            [self->_delegate jitsiViewController:self dismissViewJitsiController:nil];
         }
         else
         {

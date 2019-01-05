@@ -125,9 +125,9 @@
         // among the read receipts array of all events in all bubbles.
         NSArray *readReceiptSenders = receiptEvent.readReceiptSenders;
 
-        @synchronized(bubbles)
+        @synchronized(self->bubbles)
         {
-            for (RoomBubbleCellData *cellData in bubbles)
+            for (RoomBubbleCellData *cellData in self->bubbles)
             {
                 NSMutableDictionary<NSString* /* eventId */, NSArray<MXReceiptData*> *> *updatedCellDataReadReceipts = [NSMutableDictionary dictionary];
 
@@ -175,7 +175,7 @@
             RoomBubbleCellData *cellData = [self cellDataOfEventWithEventId:eventId];
             if (cellData)
             {
-                @synchronized(bubbles)
+                @synchronized(self->bubbles)
                 {
                     if (!cellData.hasNoDisplay)
                     {

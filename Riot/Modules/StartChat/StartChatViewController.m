@@ -578,7 +578,7 @@
                                                         preset:preset
                                                        success:^(MXRoom *room) {
                                                            
-                                                           roomCreationRequest = nil;
+                                                           self->roomCreationRequest = nil;
                                                            
                                                            [self stopActivityIndicator];
                                                            
@@ -586,9 +586,9 @@
                                                            
                                                        } failure:^(NSError *error) {
                                                            
-                                                           createBarButtonItem.enabled = YES;
+                                                           self->createBarButtonItem.enabled = YES;
                                                            
-                                                           roomCreationRequest = nil;
+                                                           self->roomCreationRequest = nil;
                                                            [self stopActivityIndicator];
                                                            
                                                            NSLog(@"[StartChatViewController] Create room failed");

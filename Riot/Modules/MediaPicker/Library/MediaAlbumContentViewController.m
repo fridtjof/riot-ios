@@ -91,7 +91,7 @@
     UIApplicationWillEnterForegroundNotificationObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillEnterForegroundNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notif) {
         
         // Force a full refresh of the displayed collection
-        self.assetsCollection = _assetsCollection;
+        self.assetsCollection = self->_assetsCollection;
         
     }];
 

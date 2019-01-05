@@ -107,7 +107,7 @@
         [self.alertController addAction:alertAction];
 
         // And show it
-        [mxkViewController presentViewController:_alertController animated:YES completion:nil];
+        [mxkViewController presentViewController:self->_alertController animated:YES completion:nil];
     }];
  }
 

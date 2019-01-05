@@ -254,7 +254,7 @@ double const kPublicRoomsDirectoryDataExpiration = 10;
             // Detect pagination end
             if (!publicRoomsResponse.nextBatch)
             {
-                _hasReachedPaginationEnd = YES;
+                self->_hasReachedPaginationEnd = YES;
             }
 
             [self setState:MXKDataSourceStateReady];

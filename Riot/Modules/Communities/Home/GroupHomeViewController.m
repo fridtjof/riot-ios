@@ -205,25 +205,25 @@
         // Indeed the group update notifications are triggered by the matrix session only for the user's groups.
         void (^success)(void) = ^void(void)
         {
-            [self refreshDisplayWithGroup:_group];
+            [self refreshDisplayWithGroup:self->_group];
         };
         
         // Trigger a refresh on the group summary.
         [self.mxSession updateGroupSummary:_group success:(isPreview ? success : nil) failure:^(NSError *error) {
             
-            NSLog(@"[GroupHomeViewController] viewWillAppear: group summary update failed %@", _group.groupId);
+            NSLog(@"[GroupHomeViewController] viewWillAppear: group summary update failed %@", self->_group.groupId);
             
         }];
         // Trigger a refresh on the group members (ignore here the invited users).
         [self.mxSession updateGroupUsers:_group success:(isPreview ? success : nil) failure:^(NSError *error) {
             
-            NSLog(@"[GroupHomeViewController] viewWillAppear: group members update failed %@", _group.groupId);
+            NSLog(@"[GroupHomeViewController] viewWillAppear: group members update failed %@", self->_group.groupId);
             
         }];
         // Trigger a refresh on the group rooms.
         [self.mxSession updateGroupRooms:_group success:(isPreview ? success : nil) failure:^(NSError *error) {
             
-            NSLog(@"[GroupHomeViewController] viewWillAppear: group rooms update failed %@", _group.groupId);
+            NSLog(@"[GroupHomeViewController] viewWillAppear: group rooms update failed %@", self->_group.groupId);
             
         }];
     }
@@ -663,12 +663,12 @@
                     self->currentRequest = nil;
                     [self stopActivityIndicator];
                     
-                    [self refreshDisplayWithGroup:[_mxSession groupWithGroupId:_group.groupId]];
+                    [self refreshDisplayWithGroup:[self->_mxSession groupWithGroupId:self->_group.groupId]];
                 }
                 
             } failure:^(NSError *error) {
                 
-                NSLog(@"[GroupDetailsViewController] join group (%@) failed", _group.groupId);
+                NSLog(@"[GroupDetailsViewController] join group (%@) failed", self->_group.groupId);
                 
                 if (weakSelf)
                 {
@@ -701,7 +701,7 @@
                 
             } failure:^(NSError *error) {
                 
-                NSLog(@"[GroupDetailsViewController] leave group (%@) failed", _group.groupId);
+                NSLog(@"[GroupDetailsViewController] leave group (%@) failed", self->_group.groupId);
                 
                 if (weakSelf)
                 {
