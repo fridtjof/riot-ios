@@ -44,6 +44,9 @@ PODS:
   - HPGrowingTextView (1.1)
   - libbase58 (0.1.4)
   - libPhoneNumber-iOS (0.9.13)
+  - MatomoTracker (6.0.0):
+    - MatomoTracker/Core (= 6.0.0)
+  - MatomoTracker/Core (6.0.0)
   - MatrixKit (0.9.2):
     - cmark (~> 0.24.1)
     - DTCoreText (~> 1.6.21)
@@ -82,9 +85,6 @@ PODS:
     - OLMKit/olmcpp (= 3.0.0)
   - OLMKit/olmc (3.0.0)
   - OLMKit/olmcpp (3.0.0)
-  - PiwikTracker (4.4.2):
-    - PiwikTracker/Core (= 4.4.2)
-  - PiwikTracker/Core (4.4.2)
   - Realm (3.11.2):
     - Realm/Headers (= 3.11.2)
   - Realm/Headers (3.11.2)
@@ -99,12 +99,12 @@ DEPENDENCIES:
   - cmark
   - DTCoreText
   - GBDeviceInfo (~> 5.2.0)
+  - MatomoTracker (~> 6.0.0)
   - MatrixKit (= 0.9.2)
   - MatrixKit/AppExtension (= 0.9.2)
   - MatrixSDK/JingleCallStack
   - MatrixSDK/SwiftSupport
   - OLMKit
-  - PiwikTracker (from `https://github.com/manuroe/matomo-sdk-ios.git`, branch `feature/CustomVariables`)
   - Reusable (~> 4.0)
 
 SPEC REPOS:
@@ -118,22 +118,13 @@ SPEC REPOS:
     - HPGrowingTextView
     - libbase58
     - libPhoneNumber-iOS
+    - MatomoTracker
     - MatrixKit
     - MatrixSDK
     - OLMKit
     - Realm
     - Reusable
     - WebRTC
-
-EXTERNAL SOURCES:
-  PiwikTracker:
-    :branch: feature/CustomVariables
-    :git: https://github.com/manuroe/matomo-sdk-ios.git
-
-CHECKOUT OPTIONS:
-  PiwikTracker:
-    :commit: dfb048f25f4eefbe13ff7515c3c1c2cad5d94491
-    :git: https://github.com/manuroe/matomo-sdk-ios.git
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
@@ -145,14 +136,14 @@ SPEC CHECKSUMS:
   HPGrowingTextView: 88a716d97fb853bcb08a4a08e4727da17efc9b19
   libbase58: 7c040313537b8c44b6e2d15586af8e21f7354efd
   libPhoneNumber-iOS: e444379ac18bbfbdefad571da735b2cd7e096caa
+  MatomoTracker: f1d0adbe609f8db3740d24e59e16a1855d263921
   MatrixKit: 211e18fe45b1809fc773a00ec4749aaa7c85842b
   MatrixSDK: f1f510d467d127a5f7afafaafa1554ac5d602132
   OLMKit: 88eda69110489f817d59bcb4353b7c247570aa4f
-  PiwikTracker: 42862c7b13028065c3dfd36b4dc38db8a5765acf
   Realm: 864477d028db77f7c5a0cba64a4892ad53db128a
   Reusable: 188be1a54ac0691bc66e5bb24ec6eb91971b315b
   WebRTC: f2a6203584745fe53532633397557876b5d71640
 
-PODFILE CHECKSUM: c43860700c490d04f7c96ecaa573cd991c27a3c4
+PODFILE CHECKSUM: 396ab827f3b203805aaa9683e7657d2c693c76d3
 
-COCOAPODS: 1.6.0.beta.2
+COCOAPODS: 1.5.3

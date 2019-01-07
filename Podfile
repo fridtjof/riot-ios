@@ -69,8 +69,8 @@ abstract_target 'RiotPods' do
 
     # Piwik for analytics
     # While https://github.com/matomo-org/matomo-sdk-ios/pull/223 is not released, use the PR branch
-    pod 'PiwikTracker', :git => 'https://github.com/manuroe/matomo-sdk-ios.git', :branch => 'feature/CustomVariables'
-    #pod 'PiwikTracker', '~> 4.4.2'
+    #pod 'PiwikTracker', :git => 'https://github.com/manuroe/matomo-sdk-ios.git', :branch => 'feature/CustomVariables'
+    pod 'MatomoTracker', '~> 6.0.0'
 
     # Remove warnings from "bad" pods
     pod 'OLMKit', :inhibit_warnings => true
@@ -101,7 +101,6 @@ post_install do |installer|
         # Plus the app does not enable it
         target.build_configurations.each do |config|
             config.build_settings['ENABLE_BITCODE'] = 'NO'
-            config.build_settings['SWIFT_VERSION'] = '4.0'     # Required for PiwikTracker. Should be removed
         end
     end
 end
